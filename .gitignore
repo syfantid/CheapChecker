@@ -1,8 +1,6 @@
 .idea/*
-*.sqlite3
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
-__init__.py
 node_modules/*
