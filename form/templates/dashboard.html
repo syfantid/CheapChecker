@@ -1,5 +1,6 @@
 {% extends "generic.html" %}
 {% block contents %}
+{% if user.is_authenticated %}
     {% if routeIDs %}
         <h2>Welcome to your personal price checker dashboard!</h2>  <p></p>
         <h5> Here you can easily check the price data of your saved route requests.</h5>
@@ -69,4 +70,10 @@
         </table>
         <p><a class="btn btn-primary" href="{% url 'form:dashboard' %}">Choose another route</a></p>
     {% endif %}
+{% else %}
+
+    <h2>Sorry, you need to login first to see this page...</h2>
+
+     <p><a class="btn btn-primary" href="{% url 'form:login' %}">Go to Login</a></p>
+{% endif %}
 {% endblock %}
