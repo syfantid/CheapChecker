@@ -1,0 +1,19 @@
+#newstartup {
+    background: url('startup-bg.png') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    border-radius: 0;
+}
+
+#newstartup h1 {
+    color: white;
+}
+
+#jumbohome {
+    background: url('CCBDA-Square.png') no-repeat;
+    background-position: right;
+    background-size: 20%;
+    background-color: linen;
+}

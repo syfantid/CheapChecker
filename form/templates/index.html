@@ -1,0 +1,108 @@
+{% extends "generic.html" %}
+{% block contents %}
+    <div class="row justify-content-md-center">
+        <div class="col-sm-8">
+            <div id="signupSuccess" class="alert alert-success" style="display:none">
+                <p id="signupSuccessText">Thanks for signing up!<br/>
+                    You'll be among the first to know when we launch.</p>
+            </div>
+            <div id="signupDuplicate" class="alert alert-success" style="display:none">
+                <p id="signupDuplicateText">Fear not, you're already on the list!<br/>
+                    You'll be among the first to know when we launch.</p>
+            </div>
+            <div id="signupError" class="alert alert-info" style="display:none">
+                <p id="signupErrorText">Well this is embarrassing.<br/>
+                    It looks like we're having trouble getting you on the list.</p>
+            </div>
+            <div class="jumbotron" id="jumbohome">
+                <h1>The next big thing is coming...</h1>
+                <div class="row">
+                    <div class="col-sm-9">
+                        <p class="lead">We're pretty thrilled to unveil the subject you always wanted to enroll in.</p>
+                        <p>Sign up below to be notified when we officially launch!</p>
+                        <p><a class="btn btn-lg btn-success" data-toggle="modal" href="#signupModal">Sign up today</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="signupModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Provide a few details and we'll be in touch...</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="signupForm" role="form">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Your name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" class="form-control" id="email" name="email"
+                                   placeholder="Your email address">
+                        </div>
+                        <div class="form-group">
+                            <label for="previewAccess">Interested in Preview Access?</label>
+                            <select class="form-control" name="previewAccess" id="previewAccess">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="signup" type="button" class="btn btn-primary">Sign Up!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+
+    {% csrf_token %}
+    <script type="text/javascript">
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $(document).ready(function () {
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+            $("#signup").click(function () {
+                $.post("{% url 'form:signup' %}", $("#signupForm").serialize(),
+                    function (data) {
+                        $("#signupSuccess").show();
+                    }
+                )
+                    .error(function (xhr) {
+                        switch (xhr.status) {
+                            case 409:
+                                $("#signupDuplicate").show();
+                                break;
+                            default:
+                                $("#signupError").show();
+                        }
+                    })
+                    .always(function () {
+                        $("#signupModal").modal('hide');
+                    });
+            })
+        })
+    </script>
+
+{% endblock %}

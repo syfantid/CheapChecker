@@ -1,0 +1,46 @@
+{% extends "generic.html" %}
+{% block contents %}
+    {% if domains %}
+        <form>
+            <div class="form-group">
+                <legend>Interested in Preview Access?</legend>
+                <label class="checkbox-inline">
+                    <input type="radio" name="preview" id="previewYes" value="Yes"> Yes
+                </label>
+                <label class="checkbox-inline">
+                    <input type="radio" name="preview" id="previewYes" value="No"> No
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="domain">Domain</label>
+                <select name="domain" id="domain" class="form-control">
+                    <option selected value="">choose...</option>
+                    {% for domain,count in domains %}
+                        <option value="{{ domain }}">{{ domain }} ({{ count }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <input class="btn btn-primary" type="submit">
+            </div>
+        </form>
+    {% else %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Email</th>
+                <th scope="col">Name</th>
+                <th scope="col">Interested in Preview Access?</th>
+            </tr>
+            </thead>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.email }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.preview }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <p><a class="btn btn-primary" href="{% url 'form:search' %}">Seach again</a></p>
+    {% endif %}
+{% endblock %}

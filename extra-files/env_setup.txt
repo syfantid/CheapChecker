@@ -1,0 +1,34 @@
+Welcome to CheapChecker!
+
+In order to run the application you need to configure your environment variables correctly.
+Please add a bash file with the following settings to your project.
+
+*** Twitter authentication ***
+In order to use Twitter authentication for the login function you first need to register the app on
+twitter and apply for access of the user email. Replace the Twitter placeholder below with your credentials.
+
+
+# Mac OSX/LINUX - environment.sh :
+
+#!/bin/bash
+export DEBUG="True"
+export CLOUD_FRONT="True"
+export STARTUP_SIGNUP_TABLE="gsg-signup-table"
+export USER_SESSION="user-session"
+export AWS_REGION="eu-west-1"
+export PRICE_LOG="PriceLog"
+export SOCIAL_AUTH_TWITTER_KEY="YOUR_KEY_HERE"
+export SOCIAL_AUTH_TWITTER_SECRET="YOUR_SECRET_HERE"
+printenv | grep "DEBUG\|CLOUD_FRONT\|STARTUP_SIGNUP_TABLE\|PRICE_LOG\|USER_SESSION\|TWITTER_KEY\|TWITTER_SECRET\|AWS_REGION"
+
+
+# Windows - environment.bat :
+set DEBUG=False
+set CLOUD_FRONT=True
+set STARTUP_SIGNUP_TABLE=gsg-signup-table
+set USER_SESSION=user-session
+set AWS_REGION=eu-west-1
+set PRICE_LOG=PriceLog
+set GEO_TABLE=twitter-geo
+set SOCIAL_AUTH_TWITTER_KEY="YOUR_KEY_HERE"
+set SOCIAL_AUTH_TWITTER_SECRET="YOUR_SECRET_HERE"

@@ -1,0 +1,72 @@
+{% extends "generic.html" %}
+{% block contents %}
+    {% if routeIDs %}
+        <h2>Welcome to your personal price checker dashboard!</h2>  <p></p>
+        <h5> Here you can easily check the price data of your saved route requests.</h5>
+        <p></p>
+        <p></p>
+        <p></p>
+        <form>
+            <div class="form-group">
+                <label for="routeID">Which route would you like to track?</label>
+                <select name="routeID" id="routeID" class="form-control">
+                    <option selected value="">choose...</option>
+                    {% for routeID,count in routeIDs %}
+                        <option value="{{ routeID }}">{{ routeID }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <input class="btn btn-primary" type="submit">
+            </div>
+        </form>
+    {% else %}
+        {% load static %}
+        <head>
+            <title>Vega Scaffold</title>
+            <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+            <script src="http://d3js.org/topojson.v1.min.js"></script>
+            <script src="http://d3js.org/d3.geo.projection.v0.min.js" charset="utf-8"></script>
+            <script src="http://trifacta.github.com/vega/vega.js"></script>
+        </head>
+        <body>
+        <h2>Here's a price overview for your selected flight route.</h2>
+        <p></p>
+        <p>For a detailed price list please refer to the table below.</p>
+        <div id="vis"></div>
+        </body>
+
+        <script type="text/javascript">
+            // parse a spec and create a visualization view
+            function parse(spec) {
+                vg.parse.spec(spec, function (chart) {
+                    chart({el: "#vis"}).update();
+                });
+            }
+
+            parse('{% static filename %}');
+        </script>
+
+        <p></p>
+        <p></p>
+        <p></p>
+        <h2>Price overview table:</h2>
+        <p></p>
+        <p></p>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Price [€]</th>
+            </tr>
+            </thead>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.price }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <p><a class="btn btn-primary" href="{% url 'form:dashboard' %}">Choose another route</a></p>
+    {% endif %}
+{% endblock %}

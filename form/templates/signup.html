@@ -1,0 +1,156 @@
+{% extends "generic.html" %}
+{% block contents %}
+    <div class="row justify-content-md-center">
+        <div class="col-sm-8">
+            <div id="signupSuccess" class="alert alert-success" style="display:none">
+                <p id="signupSuccessText">Thanks for signing up!<br/>
+                    You'll be among the first to get notified for price changes.</p>
+            </div>
+            <div id="signupDuplicate" class="alert alert-success" style="display:none">
+                <p id="signupDuplicateText">Fear not, you're already subscribed for this route!<br/>
+                    You'll be among the first to get notified for price changes.</p>
+            </div>
+            <div id="signupError" class="alert alert-info" style="display:none">
+                <p id="signupErrorText">Well this is embarrassing.<br/>
+                    It looks like we're having trouble subscribing you for this route.</p>
+            </div>
+            <div class="jumbotron" id="jumbohome">
+                <h1>Stay up to date with Ryanair Prices</h1>
+                <div class="row">
+                    <div class="col-sm-9">
+                        <p class="lead">Never pay more than you should for a Ryanair flight ever again!</p>
+                        <p>Give us your route details to be notified for price changes.</p>
+
+                        <form id="signupForm" role="form" onsubmit="return false;">
+                            <div class="form-group form-row">
+                                <div class="col">
+                                    <label for="fromAirport">From</label>
+                                    <input required type="text" class="form-control" autocomplete="off" id="fromAirport" name="fromAirport" placeholder="Departure Airport Code">
+                                </div>
+                                <div class="col">
+                                    <label for="toAirport">To</label>
+                                    <input required type="text" class="form-control" autocomplete="off" id="toAirport" name="toAirport" placeholder="Arrival Airport Code">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="date">Date</label>
+                                <input required type="date" class="form-control" id="date" name="date" placeholder="Date">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email address</label>
+                                <input required type="email" class="form-control" id="email" name="email"
+                                       placeholder="Your email address">
+                            </div>
+                            <div class="form-group" hidden>
+                                <label for="username">Username</label>
+                                <input type="username" class="form-control" id="username" name="username"
+                                       value="{{ user.username }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="notifications">Interested in Email Notifications?</label>
+                                <select class="form-control" name="notifications" id="notifications">
+                                    <option>Yes</option>
+                                    <option>No</option>
+                                </select>
+                            </div>
+                            <button type="submit" id="signup" class="btn btn-primary">Submit</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    {% csrf_token %}
+
+    <script type="text/javascript">
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $(document).ready(function () {
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+            $("#signup").click(function () {
+                $.post("{% url 'form:signup' %}", $("#signupForm").serialize(),
+                    function (data) {
+                        $(".alert").hide();
+                        $("#signupSuccess").show();
+                    }
+                )
+                    .error(function (xhr) {
+                        $(".alert").hide();
+                        switch (xhr.status) {
+                            case 409:
+                                $("#signupDuplicate").show();
+                                break;
+                            default:
+                                $("#signupError").show();
+                        }
+                    })
+            })
+        })
+    </script>
+
+    {# AWS SDK Script FromAirport Auto-complete#}
+    <script>
+        $( function() {
+                $.get( "https://s3.eu-west-3.amazonaws.com/cheapcheckerccproject/from_airports.json" ).done(function( data ) {
+                    var airports = JSON.parse(data);
+                    $( "#fromAirport" ).autocomplete( { source: airports } );
+                });
+
+        } );
+
+    </script>
+
+    {# AWS SDK Script ToAirport Auto-complete #}
+    <script>
+        $("#toAirport").click( function() {
+            var from_airport = $( "#fromAirport" ).val();
+            {# If departure airport is not set yet, then get all ryanair airports #}
+            console.log(from_airport.substring(0,from_airport.indexOf(",")));
+            if (!from_airport) {
+                from_airport = "from_airports";
+            }
+            $.get( "https://s3.eu-west-3.amazonaws.com/cheapcheckerccproject/" + from_airport.substring(0,from_airport.indexOf(",")) + ".json" ).done(function( data ) {
+                var ToAirports = JSON.parse(data);
+                console.log(ToAirports);
+                $( "#toAirport" ).autocomplete( { source: ToAirports } );
+            });
+
+        } );
+
+    </script>
+
+    {# AWS SDK Script FromAirport Auto-complete#}
+{#    <script>#}
+{#        $(document).ready( function() {#}
+{##}
+{#                var user_email = "{{  user.email }}";#}
+{#                var user = "{{  user.username }}";#}
+{#                console.log(user)#}
+{#                console.log("Email: " + user_email);#}
+{#                if(user_email) {#}
+{#                    $("#email").val(user_email);#}
+{#                    $("#email").hide();#}
+{#                }#}
+{##}
+{#        } );#}
+{##}
+{#    </script>#}
+
+
+
+{% endblock %}
