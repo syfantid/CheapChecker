@@ -1,6 +1,6 @@
 # CheapChecker
 ## Never miss the best time to book your Ryanair flight again!
-This project is devoted to the Cloud Computing and Big Data Analytics course of UPC. It uses Ryanair FRAAS API and AWS Cloud Services.
+This project is devoted to the Cloud Computing and Big Data Analytics course of UPC. It uses Ryanair FRAAS API and AWS Cloud Services. This repo is dedicated to the web app part of the project. The lambda functions can be found in a different repo.
 
 ## In order to run the application locally you should follow these steps:
 
@@ -10,7 +10,7 @@ This project is devoted to the Cloud Computing and Big Data Analytics course of 
 4. For the correct configuration follow the instructions of the env_setup.txt file in the application to set the respective environment variables. <br>
 
 *** REMARK *** <br>
-Please be aware that we're working with AWS data pipeline for continuos integration so every change in the code will automatically be deployed in our development environment on AWS. <br>
+Please be aware that we're working with AWS data pipeline for continuous integration so every change in the code will automatically be deployed in our development environment on AWS. <br>
 
 The app hosted on AWS is available under the following link: <br>
 http://cheapchecker-env.puvuhcm2iq.eu-west-3.elasticbeanstalk.com/
