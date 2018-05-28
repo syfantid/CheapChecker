@@ -9,8 +9,13 @@
 
 
 #newstartup h1 {
-    color: white;
+    color: #2B4779;
     font-weight: bold;
+}
+
+#newstartup image {
+position:absolute;
+z-index: 2;
 }
 
 #jumbohome {
