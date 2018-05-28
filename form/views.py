@@ -2,6 +2,7 @@ import os
 import random
 import string
 import boto3
+import re
 import vincent
 from collections import Counter
 from datetime import datetime, timedelta
@@ -42,6 +43,7 @@ def signup(request):
 # user dashboard: get data for route selection drop-down and chart
 def dashboard(request):
     routeID = request.GET.get('routeID')
+    user = request.user.username
     leads = Leads()
     if routeID:
         # get chart data for chosen route
@@ -64,12 +66,20 @@ def dashboard(request):
         uploadToS3('priceChart', filename);
 
         return render(request, 'dashboard.html', {'items': items, 'filename': 'priceChart/' + filename})
-    else:
+    elif user:
         # get routes for drop-down menu
-        items = leads.get_routeIDs()
-        routeIDcount = Counter()
-        routeIDcount.update([item['routeID'] for item in items])
-        return render(request, 'dashboard.html', {'routeIDs': sorted(routeIDcount.items())})
+
+        items = leads.get_routeIDs(user)
+        for item in items:
+            clean = re.sub('[$]', ' ', item['routeID'])
+
+        return render(request, 'dashboard.html', {'routeIDs': items,
+                                                  'cleanName': clean})
+        #routeIDcount = Counter()
+        #routeIDcount.update([item['routeID'] for item in items])
+        #return render(request, 'dashboard.html', {'routeIDs': sorted(routeIDcount.items())})
+    else:
+        return render(request, 'login.html')
 
 
 # function for uploading the chart json file to S3

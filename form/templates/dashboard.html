@@ -12,9 +12,8 @@
                 <label for="routeID">Which route would you like to track?</label>
                 <select name="routeID" id="routeID" class="form-control">
                     <option selected value="">choose...</option>
-                <option selected value="">choose...</option>
                     {% for routeID in routeIDs %}
-                        <option value="{{ routeID }}">{{ routeID }}</option>
+                        <option value="{{ routeID.routeID }}">{{ cleanName }}</option>
                     {% endfor %}
                 </select>
             </div>
