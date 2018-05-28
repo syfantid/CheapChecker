@@ -66,14 +66,15 @@ def dashboard(request):
         uploadToS3('priceChart', filename);
 
         return render(request, 'dashboard.html', {'items': items, 'filename': 'priceChart/' + filename})
-    else:
+    elif user:
         # get routes for drop-down menu
         items = leads.get_routeIDs(user)
        # for item in items:
            # clean = re.sub('[$]', ' ', item['routeID'])
         #return render(request, 'dashboard.html', {'routeIDs': items, 'cleanName': clean})
         return render(request, 'dashboard.html', {'routeIDs': items})
-
+    else:
+        return render(request, 'dashboard.html')
 # function for uploading the chart json file to S3
 def uploadToS3(dir, filename):
     bucketName = getattr(settings, "AWS_STORAGE_BUCKET_NAME", None)
