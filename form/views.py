@@ -70,14 +70,11 @@ def dashboard(request):
         # get routes for drop-down menu
 
         items = leads.get_routeIDs(user)
-        for item in items:
-            clean = re.sub('[$]', ' ', item['routeID'])
+        #for item in items:
+           # clean = re.sub('[$]', ' ', item['routeID'])
 
-        return render(request, 'dashboard.html', {'routeIDs': items,
-                                                  'cleanName': clean})
-        #routeIDcount = Counter()
-        #routeIDcount.update([item['routeID'] for item in items])
-        #return render(request, 'dashboard.html', {'routeIDs': sorted(routeIDcount.items())})
+        #return render(request, 'dashboard.html', {'routeIDs': items, 'cleanName': clean})
+        return render(request, 'dashboard.html', {'routeIDs': items})
     else:
         return render(request, 'login.html')
 
