@@ -69,18 +69,23 @@ def dashboard(request):
     elif user:
         # get routes for drop-down menu
         items = leads.get_routeIDs(user)
-       # for item in items:
-           # clean = re.sub('[$]', ' ', item['routeID'])
-        #return render(request, 'dashboard.html', {'routeIDs': items, 'cleanName': clean})
         return render(request, 'dashboard.html', {'routeIDs': items})
+
+        # String clean-up, not working yet
+        #for item in items:
+        #    clean = re.sub('[$]', ' ', item['routeID'])
+        #return render(request, 'dashboard.html', {'routeIDs': items, 'cleanName': clean})
     else:
         return render(request, 'dashboard.html')
+
+
 # function for uploading the chart json file to S3
 def uploadToS3(dir, filename):
     bucketName = getattr(settings, "AWS_STORAGE_BUCKET_NAME", None)
     s3 = boto3.resource('s3')
     data = open(os.path.join(BASE_DIR, 'static', filename), 'rb')
     s3.Bucket(bucketName).put_object(Key=dir + '/' + filename, Body=data)
+
 
 # function for creating unique ID for dashboard chart files
 def generateUniqueName():
