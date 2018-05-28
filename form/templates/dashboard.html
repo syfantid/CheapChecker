@@ -2,7 +2,7 @@
 {% block contents %}
 {% if user.is_authenticated %}
     {% if routeIDs %}
-        <h2>Welcome to your personal price checker dashboard!</h2>  <p></p>
+        <h2>Hello, {{ user.get_full_name }}! Welcome to your personal price checker dashboard!</h2>  <p></p>
         <h5> Here you can easily check the price data of your saved route requests.</h5>
         <p></p>
         <p></p>
@@ -12,7 +12,8 @@
                 <label for="routeID">Which route would you like to track?</label>
                 <select name="routeID" id="routeID" class="form-control">
                     <option selected value="">choose...</option>
-                    {% for routeID,count in routeIDs %}
+                <option selected value="">choose...</option>
+                    {% for routeID in routeIDs %}
                         <option value="{{ routeID }}">{{ routeID }}</option>
                     {% endfor %}
                 </select>
