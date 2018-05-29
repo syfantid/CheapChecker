@@ -86,7 +86,7 @@ class Leads(models.Model):
     def get_routeIDs(self, user):
         try:
             dynamodb = boto3.resource('dynamodb', region_name=AWS_REGION)
-            table = dynamodb.Table(os.environ['REQUESTS'])
+            table = dynamodb.Table(os.environ['STARTUP_SIGNUP_TABLE'])
         except Exception as e:
             logger.error(
                 'Error connecting to database table: ' + (e.fmt if hasattr(e, 'fmt') else '') + ','.join(e.args))
