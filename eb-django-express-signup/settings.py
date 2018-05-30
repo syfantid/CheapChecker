@@ -170,10 +170,9 @@ LOGGING = {
 }
 
 CLOUD_FRONT = os.environ['CLOUD_FRONT'] == 'True'
-
 if CLOUD_FRONT:
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    AWS_STORAGE_BUCKET_NAME = "cheapcheckerapp"
-    AWS_S3_CUSTOM_DOMAIN = 'd21w0allf91g73.cloudfront.net'
+    AWS_STORAGE_BUCKET_NAME = "cheapcheckerccproject"
+    AWS_S3_CUSTOM_DOMAIN = 'd2z329cpjquem3.cloudfront.net'
 

@@ -83,19 +83,53 @@ class Leads(models.Model):
         return None
 
     # Drop-down menu of dashboard
-    def get_routeIDs(self):
+    def get_routeIDs(self, user):
         try:
             dynamodb = boto3.resource('dynamodb', region_name=AWS_REGION)
-            table = dynamodb.Table(os.environ['PRICE_LOG'])
+            table = dynamodb.Table(os.environ['STARTUP_SIGNUP_TABLE'])
         except Exception as e:
             logger.error(
                 'Error connecting to database table: ' + (e.fmt if hasattr(e, 'fmt') else '') + ','.join(e.args))
             return None
 
+        # filter only routes for current user
+        expression_attribute_values = {}
+        FilterExpression = []
+        expression_attribute_values[':u'] = user
+        FilterExpression.append('username = :u')
         response = table.scan(
+            FilterExpression=' and '.join(FilterExpression),
+            ExpressionAttributeValues=expression_attribute_values,
             ProjectionExpression='routeID',
         )
+
         if response['ResponseMetadata']['HTTPStatusCode'] == 200:
             return response['Items']
         logger.error('Unknown error retrieving items from database.')
         return None
+
+        # # Drop-down menu of dashboard
+        # def get_routeIDs(self, username):
+        #     try:
+        #         dynamodb = boto3.resource('dynamodb', region_name=AWS_REGION)
+        #         table = dynamodb.Table(os.environ['PRICE_LOG'])
+        #     except Exception as e:
+        #         logger.error(
+        #             'Error connecting to database table: ' + (e.fmt if hasattr(e, 'fmt') else '') + ','.join(e.args))
+        #         return None
+        #
+        #     # filter only routes for current user
+        #     expression_attribute_values = {}
+        #     FilterExpression = []
+        #     expression_attribute_values[':u'] = username
+        #     FilterExpression.append('username = :u')
+        #     response = table.scan(
+        #         FilterExpression=' and '.join(FilterExpression),
+        #         ExpressionAttributeValues=expression_attribute_values,
+        #         ProjectionExpression='routeID',
+        #     )
+        #
+        #     if response['ResponseMetadata']['HTTPStatusCode'] == 200:
+        #         return response['Items']
+        #     logger.error('Unknown error retrieving items from database.')
+        #     return None
